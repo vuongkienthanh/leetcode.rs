@@ -1,12 +1,14 @@
 #![allow(unused_imports)]
 #![allow(dead_code)]
 mod solution;
-use leetcode::{vos, vov, ListNode, TreeNode};
+use leetcode::{gcd, lcm, vos, vov, ListNode, TreeNode};
 use solution::*;
 use std::cell::RefCell;
 use std::rc::Rc;
 
-fn main() {}
+fn main() {
+    println!("{}", gcd(4, 2))
+}
 
 #[cfg(test)]
 mod tests {
