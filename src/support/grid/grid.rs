@@ -1,7 +1,7 @@
 use std::ops::{Index, IndexMut};
 
 pub struct Grid<T>(Vec<Vec<T>>);
-type Coord = (usize, usize);
+pub type Coord = (usize, usize);
 
 impl<T> Grid<T> {
     pub fn new(value: Vec<Vec<T>>) -> Self {
@@ -42,6 +42,29 @@ impl<T> Grid<T> {
                 y => vec![ (x - 1, y - 1), (x - 1, y), (x - 1, y + 1), (x, y - 1), (x, y + 1), (x + 1, y - 1), (x + 1, y), (x + 1, y + 1), ],
             },
         }
+    }
+    pub fn diameter(&self, dia: usize, coord: Coord) -> Vec<Coord> {
+        let rows = coord.0.saturating_sub(dia)..(coord.0 + dia + 1).min(self.rows());
+        let cols = (0..=dia)
+            .chain((0..dia).rev())
+            .map(|d| {
+                if d == 0 {
+                    vec![coord.1]
+                } else {
+                    let mut cells = vec![];
+                    if coord.1 >= d {
+                        cells.push(coord.1 - d);
+                    }
+                    if coord.1 + d < self.cols() {
+                        cells.push(coord.1 + d);
+                    }
+                    cells
+                }
+            })
+            .skip(if coord.0 >= dia { 0 } else { dia - coord.0 });
+        rows.zip(cols)
+            .flat_map(|(r, cs)| cs.into_iter().map(move |c| (r, c)))
+            .collect()
     }
 }
 
